@@ -4,6 +4,7 @@
         this.$body = $("body"),
             this.$openLeftBtn = $(".open-left"),
             this.$menuItem = $("#sidebar-menu a")
+            this.$menuItem1 = $("#sidebar-menu1 div")
     };
     Sidemenu.prototype.openLeftBar = function () {
         $("#wrapper").toggleClass("enlarged");
@@ -47,7 +48,14 @@
                     $(".pull-right i", $(this).parent()).removeClass("md-remove").addClass("md-add");
                 }
             }
+
+
+
+
+
         },
+
+
 
         //init sidemenu
         Sidemenu.prototype.init = function () {

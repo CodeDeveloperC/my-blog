@@ -91,6 +91,7 @@ public class ContentServiceImpl implements IContentService {
         String tags = contents.getTags();
         String categories = contents.getCategories();
         contentDao.insert(contents);
+        //id自动增长，且自动生成
         Integer cid = contents.getCid();
         metasService.saveMetas(cid, tags, Types.TAG.getType());
         metasService.saveMetas(cid, categories, Types.CATEGORY.getType());
@@ -102,6 +103,7 @@ public class ContentServiceImpl implements IContentService {
         LOGGER.debug("Enter getContents method");
         ContentVoExample example = new ContentVoExample();
         example.setOrderByClause("created desc");
+        //枚举类可以直接使用，变量名可以相同，可以通过构造函数改变
         example.createCriteria().andTypeEqualTo(Types.ARTICLE.getType()).andStatusEqualTo(Types.PUBLISH.getType());
         PageHelper.startPage(p, limit);
         List<ContentVo> data = contentDao.selectByExampleWithBLOBs(example);
@@ -120,6 +122,7 @@ public class ContentServiceImpl implements IContentService {
                 ContentVoExample contentVoExample = new ContentVoExample();
                 contentVoExample.createCriteria().andSlugEqualTo(id);
                 List<ContentVo> contentVos = contentDao.selectByExampleWithBLOBs(contentVoExample);
+                //防止主键不一
                 if (contentVos.size() != 1) {
                     throw new TipException("query content by id and return is not one");
                 }
@@ -129,9 +132,16 @@ public class ContentServiceImpl implements IContentService {
         return null;
     }
 
+    /**
+     * 更新也是要开启事务的
+     * @param contentVo contentVo
+     */
     @Override
+    @Transactional
     public void updateContentByCid(ContentVo contentVo) {
         if (null != contentVo && null != contentVo.getCid()) {
+            //updateByPrimaryKeySelective只是更新新的model中不为空的字段。
+            //updateByPrimaryKey则会将为空的字段在数据库中置为NULL。
             contentDao.updateByPrimaryKeySelective(contentVo);
         }
     }
@@ -155,6 +165,8 @@ public class ContentServiceImpl implements IContentService {
         criteria.andStatusEqualTo(Types.PUBLISH.getType());
         criteria.andTitleLike("%" + keyword + "%");
         contentVoExample.setOrderByClause("created desc");
+        //若检索大字段时，则需要使用selectByExampleWithBLOBs
+        //如数据库中的 text 属性
         List<ContentVo> contentVos = contentDao.selectByExampleWithBLOBs(contentVoExample);
         return new PageInfo<>(contentVos);
     }
@@ -179,6 +191,7 @@ public class ContentServiceImpl implements IContentService {
     }
 
     @Override
+    @Transactional
     public void updateCategory(String ordinal, String newCatefory) {
         ContentVo contentVo = new ContentVo();
         contentVo.setCategories(newCatefory);
@@ -216,6 +229,7 @@ public class ContentServiceImpl implements IContentService {
         int time = DateKit.getCurrentUnixTime();
         contents.setModified(time);
         Integer cid = contents.getCid();
+        //Emoji表情后台处理
         contents.setContent(EmojiParser.parseToAliases(contents.getContent()));
 
         contentDao.updateByPrimaryKeySelective(contents);

@@ -12,7 +12,7 @@ public class CommentVo implements Serializable {
     private Integer coid;
 
     /**
-     * post表主键,关联字段
+     * post表主键,关联字段(文章主键)
      */
     private Integer cid;
 

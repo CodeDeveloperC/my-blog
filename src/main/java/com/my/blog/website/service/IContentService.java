@@ -46,7 +46,7 @@ public interface IContentService {
 
 
     /**
-     * 查询分类/标签下的文章归档
+     * 查询分类/标签下的文章归档(项目分类)
      * @param mid mid
      * @param page page
      * @param limit limit

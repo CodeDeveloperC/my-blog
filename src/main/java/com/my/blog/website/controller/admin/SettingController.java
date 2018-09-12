@@ -59,6 +59,7 @@ public class SettingController extends BaseController {
 
     /**
      * 保存系统设置
+     * (@RequestParam(required = false) 表示可以不传这个参数
      */
     @PostMapping(value = "")
     @ResponseBody

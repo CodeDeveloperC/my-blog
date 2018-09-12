@@ -7,7 +7,7 @@ $('#tags').tagsInput({
     height: '35px',
     defaultText: '请输入文章标签'
 });
-
+// toggles 切换
 $('.toggle').toggles({
     on: true,
     text: {

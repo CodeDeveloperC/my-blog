@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * map缓存实现
- * <p>
+ * <p> -1 为永不过期，默认永不过期
  * Created by 13 on 2017/2/7.
  */
 public class MapCache {
@@ -32,6 +32,11 @@ public class MapCache {
 
     public MapCache(int cacheCount) {
         cachePool = new ConcurrentHashMap<>(cacheCount);
+    }
+
+    //返回缓冲池
+    public Map<String, CacheObject> getCachePool() {
+        return cachePool;
     }
 
     /**
@@ -151,7 +156,8 @@ public class MapCache {
         cachePool.clear();
     }
 
-    static class CacheObject {
+    //方便new 出来
+    public static class CacheObject {
         private String key;
         private Object value;
         private long expired;

@@ -18,7 +18,7 @@ public interface ICommentService {
 
     /**
      * 获取文章下的评论
-     * @param cid
+     * @param cid 文章id
      * @param page
      * @param limit
      * @return CommentBo

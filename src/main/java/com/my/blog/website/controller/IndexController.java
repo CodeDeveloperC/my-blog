@@ -59,7 +59,7 @@ public class IndexController extends BaseController {
      * @return
      */
     @GetMapping(value = "/")
-    public String index(HttpServletRequest request, @RequestParam(value = "limit", defaultValue = "12") int limit) {
+    public String index(HttpServletRequest request, @RequestParam(value = "limit", defaultValue = "2") int limit) {
         return this.index(request, 1, limit);
     }
 
@@ -72,7 +72,7 @@ public class IndexController extends BaseController {
      * @return 主页
      */
     @GetMapping(value = "page/{p}")
-    public String index(HttpServletRequest request, @PathVariable int p, @RequestParam(value = "limit", defaultValue = "12") int limit) {
+    public String index(HttpServletRequest request, @PathVariable int p, @RequestParam(value = "limit", defaultValue = "2") int limit) {
         p = p < 0 || p > WebConst.MAX_PAGE ? 1 : p;
         PageInfo<ContentVo> articles = contentService.getContents(p, limit);
         request.setAttribute("articles", articles);
@@ -92,6 +92,7 @@ public class IndexController extends BaseController {
     @GetMapping(value = {"article/{cid}", "article/{cid}.html"})
     public String getArticle(HttpServletRequest request, @PathVariable String cid) {
         ContentVo contents = contentService.getContents(cid);
+        //draft 草案
         if (null == contents || "draft".equals(contents.getStatus())) {
             return this.render_404();
         }
@@ -143,6 +144,7 @@ public class IndexController extends BaseController {
                 cp = "1";
             }
             request.setAttribute("cp", cp);
+            //Paginator 分页程序
             PageInfo<CommentBo> commentsPaginator = commentService.getComments(contents.getCid(), Integer.parseInt(cp), 6);
             request.setAttribute("comments", commentsPaginator);
         }
@@ -202,7 +204,7 @@ public class IndexController extends BaseController {
         String val = IPKit.getIpAddrByRequest(request) + ":" + cid;
         Integer count = cache.hget(Types.COMMENTS_FREQUENCY.getType(), val);
         if (null != count && count > 0) {
-            return RestResponseBo.fail("您发表评论太快了，请过会再试");
+            //return RestResponseBo.fail("您发表评论太快了，请过会再试");
         }
 
         author = TaleUtils.cleanXSS(author);
@@ -246,13 +248,13 @@ public class IndexController extends BaseController {
      * @return
      */
     @GetMapping(value = "category/{keyword}")
-    public String categories(HttpServletRequest request, @PathVariable String keyword, @RequestParam(value = "limit", defaultValue = "12") int limit) {
+    public String categories(HttpServletRequest request, @PathVariable String keyword, @RequestParam(value = "limit", defaultValue = "2") int limit) {
         return this.categories(request, keyword, 1, limit);
     }
 
     @GetMapping(value = "category/{keyword}/{page}")
     public String categories(HttpServletRequest request, @PathVariable String keyword,
-                             @PathVariable int page, @RequestParam(value = "limit", defaultValue = "12") int limit) {
+                             @PathVariable int page, @RequestParam(value = "limit", defaultValue = "2") int limit) {
         page = page < 0 || page > WebConst.MAX_PAGE ? 1 : page;
         MetaDto metaDto = metaService.getMeta(Types.CATEGORY.getType(), keyword);
         if (null == metaDto) {
@@ -296,6 +298,7 @@ public class IndexController extends BaseController {
 
     /**
      * 自定义页面,如关于的页面
+     * 统一处理页面
      */
     @GetMapping(value = "/{pagename}")
     public String page(@PathVariable String pagename, HttpServletRequest request) {
@@ -326,12 +329,12 @@ public class IndexController extends BaseController {
      * @return
      */
     @GetMapping(value = "search/{keyword}")
-    public String search(HttpServletRequest request, @PathVariable String keyword, @RequestParam(value = "limit", defaultValue = "12") int limit) {
+    public String search(HttpServletRequest request, @PathVariable String keyword, @RequestParam(value = "limit", defaultValue = "2") int limit) {
         return this.search(request, keyword, 1, limit);
     }
 
     @GetMapping(value = "search/{keyword}/{page}")
-    public String search(HttpServletRequest request, @PathVariable String keyword, @PathVariable int page, @RequestParam(value = "limit", defaultValue = "12") int limit) {
+    public String search(HttpServletRequest request, @PathVariable String keyword, @PathVariable int page, @RequestParam(value = "limit", defaultValue = "2") int limit) {
         page = page < 0 || page > WebConst.MAX_PAGE ? 1 : page;
         PageInfo<ContentVo> articles = contentService.getArticles(keyword, page, limit);
         request.setAttribute("articles", articles);
@@ -370,7 +373,7 @@ public class IndexController extends BaseController {
      * @return
      */
     @GetMapping(value = "tag/{name}")
-    public String tags(HttpServletRequest request, @PathVariable String name, @RequestParam(value = "limit", defaultValue = "12") int limit) {
+    public String tags(HttpServletRequest request, @PathVariable String name, @RequestParam(value = "limit", defaultValue = "2") int limit) {
         return this.tags(request, name, 1, limit);
     }
 
@@ -384,7 +387,7 @@ public class IndexController extends BaseController {
      * @return
      */
     @GetMapping(value = "tag/{name}/{page}")
-    public String tags(HttpServletRequest request, @PathVariable String name, @PathVariable int page, @RequestParam(value = "limit", defaultValue = "12") int limit) {
+    public String tags(HttpServletRequest request, @PathVariable String name, @PathVariable int page, @RequestParam(value = "limit", defaultValue = "2") int limit) {
 
         page = page < 0 || page > WebConst.MAX_PAGE ? 1 : page;
 //        对于空格的特殊处理

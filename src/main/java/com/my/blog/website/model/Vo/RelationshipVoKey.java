@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 public class RelationshipVoKey implements Serializable {
     /**
-     * 内容主键
+     * 内容(文章)主键
      */
     private Integer cid;
 

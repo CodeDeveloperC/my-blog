@@ -1,16 +1,16 @@
 package com.my.blog.website.utils;
 
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.Random;
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
-
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 /**
  * 工具类
@@ -19,6 +19,12 @@ import sun.misc.BASE64Encoder;
 public class Tools {
     private static final Random random = new Random();
 
+    /**
+     * FileChannel Java读取复制超大文件加速
+     * @param source
+     * @param dest
+     * @throws IOException
+     */
     public static void copyFileUsingFileChannels(File source, File dest) throws IOException {
         FileChannel inputChannel = null;
         FileChannel outputChannel = null;
@@ -56,6 +62,7 @@ public class Tools {
 
     public static String enAes(String data, String key) throws Exception {
         Cipher cipher = Cipher.getInstance("AES");
+        //key为秘钥，默认为AES
         SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
         cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
         byte[] encryptedBytes = cipher.doFinal(data.getBytes());

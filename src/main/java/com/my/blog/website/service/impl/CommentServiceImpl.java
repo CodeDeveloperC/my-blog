@@ -51,8 +51,8 @@ public class CommentServiceImpl implements ICommentService {
         if (StringUtils.isBlank(comments.getContent())) {
             return "评论内容不能为空";
         }
-        if (comments.getContent().length() < 5 || comments.getContent().length() > 2000) {
-            return "评论字数在5-2000个字符";
+        if (comments.getContent().length() < 1 || comments.getContent().length() > 2000) {
+            return "评论字数在1-2000个字符";
         }
         if (null == comments.getCid()) {
             return "评论文章不能为空";
@@ -80,6 +80,7 @@ public class CommentServiceImpl implements ICommentService {
         if (null != cid) {
             PageHelper.startPage(page, limit);
             CommentVoExample commentVoExample = new CommentVoExample();
+            //approved 批准
             commentVoExample.createCriteria().andCidEqualTo(cid).andParentEqualTo(0).andStatusIsNotNull().andStatusEqualTo("approved");
             commentVoExample.setOrderByClause("coid desc");
             List<CommentVo> parents = commentDao.selectByExampleWithBLOBs(commentVoExample);

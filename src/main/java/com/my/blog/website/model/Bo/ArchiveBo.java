@@ -7,6 +7,7 @@ import java.util.List;
 
 /**
  * Created by 13 on 2017/2/23.
+ * Archive 档案
  */
 public class ArchiveBo implements Serializable {
 

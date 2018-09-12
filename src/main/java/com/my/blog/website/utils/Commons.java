@@ -164,7 +164,7 @@ public final class Commons {
 
     /**
      * 返回文章链接地址
-     *
+     * site_url 网站网址
      * @param cid
      * @param slug
      * @return
@@ -335,6 +335,8 @@ public final class Commons {
      * @return
      */
     public static Map<String, String> social() {
+        //先初始化网址
+        WebConst.setSocial();
         final String prefix = "social_";
         Map<String, String> map = new HashMap<>();
         map.put("weibo", WebConst.initConfig.get(prefix + "weibo"));

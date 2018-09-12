@@ -1,26 +1,9 @@
 package com.my.blog.website.utils;
 
-import java.awt.Image;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.text.Normalizer;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.imageio.ImageIO;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.sql.DataSource;
-
+import com.my.blog.website.constant.WebConst;
+import com.my.blog.website.controller.admin.AttachController;
+import com.my.blog.website.exception.TipException;
+import com.my.blog.website.model.Vo.UserVo;
 import org.apache.commons.lang3.StringUtils;
 import org.commonmark.Extension;
 import org.commonmark.ext.gfm.tables.TablesExtension;
@@ -31,10 +14,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-import com.my.blog.website.constant.WebConst;
-import com.my.blog.website.controller.admin.AttachController;
-import com.my.blog.website.exception.TipException;
-import com.my.blog.website.model.Vo.UserVo;
+import javax.imageio.ImageIO;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
+import java.awt.*;
+import java.io.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.text.Normalizer;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Tale工具类
@@ -53,7 +48,7 @@ public class TaleUtils {
     private static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
     private static final Pattern SLUG_REGEX = Pattern.compile("^[A-Za-z0-9_-]{5,100}$", Pattern.CASE_INSENSITIVE);
-    // 使用双重检查锁的单例方式需要添加 volatile 关键字
+    // 使用双重检查锁的单例方式需要添加 volatile 关键字 Java提供了volatile关键字来保证可见性。
     private static volatile DataSource newDataSource;
     /**
      * markdown解析器
@@ -197,8 +192,10 @@ public class TaleUtils {
     }
 
     /**
-     * 设置记住密码cookie
-     *
+     * 设置记住密码cookie.
+     * 把cookie的secure属性设为 false,
+     * 则在系统设置cookie的时候，把cookie的secure属性设为true就行了。
+     * 设置了secure属性的cookie只在https中传输和分享，http是不传输的哦
      * @param response
      * @param uid
      */
@@ -207,6 +204,7 @@ public class TaleUtils {
             String val = Tools.enAes(uid.toString(), WebConst.AES_SALT);
             boolean isSSL = false;
             Cookie cookie = new Cookie(WebConst.USER_IN_COOKIE, val);
+            //可在同一应用服务器内共享方法
             cookie.setPath("/");
             cookie.setMaxAge(60 * 30);
             cookie.setSecure(isSSL);
@@ -340,8 +338,7 @@ public class TaleUtils {
 
     /**
      * 判断是否是合法路径
-     *
-     * @param slug
+     * @param slug 金属块
      * @return
      */
     public static boolean isPath(String slug) {

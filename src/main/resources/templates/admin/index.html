@@ -30,6 +30,7 @@
                             </div>
                         </div>
 
+                        <!--aria-hidden="true" 这个是用于屏幕阅读器的，帮助残障人士更好的访问网站。-->
                         <div class="col-sm-6 col-lg-3">
                             <div class="mini-stat clearfix bg-success bx-shadow">
                                 <span class="mini-stat-icon"><i class="fa fa-cloud-upload"
@@ -58,6 +59,8 @@
                                 </div>
                                 <div class="panel-body">
                                     <ul class="list-group">
+                                        <!--commons.site_url('/article/') 相当于浏览器直接请求/article-->
+                                        <!--/*@thymesVar id="articles" type="PageInfo<ContentVo>"*/-->
                                         <li class="list-group-item" th:each="article : ${articles}">
                             <span class="badge badge-primary"
                                   th:title="${article.commentsNum}+'条评论'" th:text="${article.commentsNum}"></span>
@@ -74,6 +77,7 @@
                                     <h4 class="panel-title">最新留言</h4>
                                 </div>
                                 <div class="panel-body">
+                                    <!--#lists.size thymleaf 特有的语法-->
                                     <div th:if="${comments}== null and ${#lists.size(comments)}==0">
                                         <div class="alert alert-warning">
                                             还没有收到留言.
@@ -86,8 +90,11 @@
                                                 <a th:href="@{${comment.url}}" target="_blank"
                                                    th:text="${comment.author}"></a>
                                             </div>
-                                            <th:block th:unless="${comment.url}!=null and ${comment.url}!=''" th:text="${comment.author}"/>
-                                            于<th:block th:text="${commons.fmtdate(comment.created,'MM月dd日HH:mm')}"/>：<a
+                                            <th:block th:unless="${comment.url}!=null and ${comment.url}!=''"
+                                                      th:text="${comment.author}"/>
+                                            于
+                                            <th:block th:text="${commons.fmtdate(comment.created,'MM月dd日HH:mm')}"/>
+                                            ：<a
                                                 th:href="${commons.site_url('/article/')}+${comment.cid}+'#comments'"
                                                 target="_blank" th:utext="${commons.article(comment.content)}"></a>
                                         </li>
@@ -101,7 +108,7 @@
                                     <h4 class="panel-title">系统日志</h4>
                                 </div>
                                 <div class="panel-body">
-                                    <ul class="list-group" >
+                                    <ul class="list-group">
                                         <li class="list-group-item" th:each="log : ${logs}">
                                             <span th:text="${commons.fmtdate(log.created, 'yyyy-MM-dd HH:mm:ss')} +' => '+ ${log.action}"></span>
                                         </li>

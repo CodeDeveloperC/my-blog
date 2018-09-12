@@ -3,9 +3,7 @@ package com.my.blog.website.constant;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by BlueT on 2017/3/3.
@@ -20,9 +18,9 @@ public class WebConst {
     public static final String USER_IN_COOKIE = "S_L_ID";
 
     /**
-     * aes加密加盐
+     * aes加密秘钥 ,key 必须为16位(多了少了都不行)
      */
-    public static String AES_SALT = "0123456789abcdef";
+    public static String AES_SALT = "sleewasleewaslee";
 
     /**
      * 最大获取文章条数
@@ -52,7 +50,7 @@ public class WebConst {
     /**
      * 上传文件最大1M
      */
-    public static Integer MAX_FILE_SIZE = 1048576;
+    public static Integer MAX_FILE_SIZE = 1048576*10;
 
     /**
      * 成功返回
@@ -63,4 +61,23 @@ public class WebConst {
      * 同一篇文章在2个小时内无论点击多少次只算一次阅读
      */
     public static Integer HITS_LIMIT_TIME = 7200;
+
+    /**
+     * 设置网站网址
+     */
+    public static void setSocial() {
+        final String prefix = "social_";
+        initConfig.put(prefix + "weibo", "https://www.weibo.com/");
+        initConfig.put(prefix + "zhihu",  "https://www.zhihu.com/");
+        initConfig.put(prefix + "github", "https://www.github.com/");
+        initConfig.put(prefix + "twitter", "https://www.twitter.com/");
+
+
+        testsite_title();
+
+    }
+
+    public static void testsite_title() {
+        initConfig.put("site_title", "commons.site_title()");
+    }
 }

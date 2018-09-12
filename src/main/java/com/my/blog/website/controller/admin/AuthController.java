@@ -54,6 +54,12 @@ public class AuthController extends BaseController {
                                   HttpServletResponse response) {
 
         Integer error_count = cache.get("login_error_count");
+        //10分钟以内不允许再登录
+//        if (error_count != null &&error_count>=3) {
+//            return RestResponseBo.fail("您输入密码已经错误超过3次，请10分钟后尝试");
+//        }
+
+
         try {
             UserVo user = usersService.login(username, password);
             request.getSession().setAttribute(WebConst.LOGIN_SESSION_KEY, user);

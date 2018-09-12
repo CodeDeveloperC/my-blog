@@ -99,6 +99,7 @@
     function checkForm() {
         tale.post({
             url: '/admin/login',
+            //serialize() 方法通过序列化表单值，创建 URL 编码文本字符串
             data: $("#loginForm").serialize(),
             success: function (result) {
                 if (result && result.success) {

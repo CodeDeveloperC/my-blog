@@ -24,6 +24,7 @@ import java.util.Arrays;
 public class LogAspect {
     private static final Logger LOGGER = LoggerFactory.getLogger(DataSource.class);
 
+    //controller后面的..表示包、子孙包下所有类的所有方法
     @Pointcut("execution(public * com.my.blog.website.controller..*.*(..))")
     public void webLog(){}
 
